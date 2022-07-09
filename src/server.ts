@@ -18,4 +18,6 @@ app.use("/api/post", postRouter);
 
 app.get("/", (req: Request, res: Response) => res.send("Hello World!"));
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+app.listen(port || "https://sns-sns-test.herokuapp.com", () =>
+  console.log(`Example app listening on port ${port}!`)
+);

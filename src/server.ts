@@ -18,6 +18,6 @@ app.use("/api/post", postRouter);
 
 app.get("/", (req: Request, res: Response) => res.send("Hello World!"));
 
-app.listen(process.env.PORT || port, () =>
+app.listen(process.env.PORT, () =>
   console.log(`Example app listening on port ${port}!`)
 );

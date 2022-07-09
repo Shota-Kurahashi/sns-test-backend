@@ -2,10 +2,11 @@
   "name": "ts",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/src/server.js",
+  "main": "src/server.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node dist/src/index.js",
+    "start": "node build/server.js",
+    "postinstall": "tsc",
     "dev": "nodemon src/server.ts",
     "eslint": "eslint . --fix",
     "fix": "npm run format && npm run lint",

@@ -1,7 +1,7 @@
 import cors from "cors";
 import express, { Request, Response } from "express";
-import postRouter from "../routes/post";
-import userRouter from "../routes/users";
+import postRouter from "./routes/post";
+import userRouter from "./routes/users";
 
 const app = express();
 const port = 5050;
@@ -18,6 +18,6 @@ app.use("/api/post", postRouter);
 
 app.get("/", (req: Request, res: Response) => res.send("Hello World!"));
 
-app.listen(port || "https://sns-sns-test.herokuapp.com", () =>
+app.listen(port || "https://sns-test-backend.herokuapp.com/", () =>
   console.log(`Example app listening on port ${port}!`)
 );

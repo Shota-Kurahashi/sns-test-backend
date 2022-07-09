@@ -1,29 +1,20 @@
-import { PrismaClient } from "@prisma/client";
+import cors from "cors";
 import express, { Request, Response } from "express";
+import postRouter from "../routes/post";
+import userRouter from "../routes/users";
 
 const app = express();
-const port = 5000;
+const port = 5050;
 
-const prisma = new PrismaClient();
+const corsOptions = {
+  origin: "http://localhost:3000",
+  optionsSuccessStatus: 200,
+};
 app.use(express.json());
+app.use(cors(corsOptions));
 
-app.get("/users", async (req: Request, res: Response) => {
-  const users = await prisma.user.findMany();
-
-  return res.json(users);
-});
-
-app.post("/users", async (req: Request, res: Response) => {
-  const { name, email } = req.body;
-  const user = await prisma.user.create({
-    data: {
-      name,
-      email,
-    },
-  });
-
-  return res.json(user);
-});
+app.use("/api/users", userRouter);
+app.use("/api/post", postRouter);
 
 app.get("/", (req: Request, res: Response) => res.send("Hello World!"));
 

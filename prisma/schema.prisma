@@ -8,7 +8,17 @@ datasource db {
 }
 
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
+  email  String  @unique
+  name   String?
+  userId String  @id @unique @default(uuid())
+  Posts  Post[]
+}
+
+model Post {
+  id       String  @id @unique @default(uuid())
+  title    String
+  content  String?
+    body     String?
+  authorId String
+  author   User    @relation(fields: [authorId], references: [userId])
 }

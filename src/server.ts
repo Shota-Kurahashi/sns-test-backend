@@ -7,7 +7,7 @@ const app = express();
 const port = 5050;
 
 const corsOptions = {
-  origin: "https://sns-test-frontend.vercel.app" || "http://localhost:3000",
+  origin: ["https://sns-test-frontend.vercel.app", "http://localhost:3000"],
   optionsSuccessStatus: 200,
 };
 app.use(express.json());

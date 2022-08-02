@@ -30,12 +30,12 @@
     "eslint-plugin-import": "^2.26.0",
     "nodemon": "^2.0.19",
     "prettier": "^2.7.1",
-    "prisma": "^4.0.0",
+    "prisma": "^4.1.1",
     "ts-node": "^10.8.2",
     "typescript": "^4.7.4"
   },
   "dependencies": {
-    "@prisma/client": "^4.0.0",
+    "@prisma/client": "^4.1.1",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "express": "^4.18.1",

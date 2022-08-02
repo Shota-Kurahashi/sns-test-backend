@@ -1,5 +1,7 @@
 import { Prisma, PrismaClient } from "@prisma/client";
+import bcrypt from "bcryptjs";
 import express, { Request, Response } from "express";
+import jwt from "jsonwebtoken";
 
 const router = express.Router();
 const prisma = new PrismaClient();
@@ -12,23 +14,83 @@ router.get("/", async (req: Request, res: Response) => {
 });
 
 // userの登録
-router.post("/", async (req: Request, res: Response) => {
-  const { name, email } = req.body;
+router.post("/register", async (req: Request, res: Response) => {
+  const { name, email, password } = req.body;
+
+  // DBにユーザーが存在するか確認
   try {
-    const createUser = await prisma.user.create({
-      data: {
-        name,
-        email,
-      },
+    const user = await prisma.user.findUnique({
+      where: { email },
     });
 
-    return res.json(createUser);
-  } catch (err) {
-    return res.status(400).json(err);
+    // userが存在した場合
+    if (user) {
+      return res.status(400).json({ error: "すでに登録されています" });
+    }
+
+    // パスワードの暗号化
+    const hashPassword = await bcrypt.hash(password, 10);
+
+    // userが存在しなかった場合
+    try {
+      const createUser = await prisma.user.create({
+        data: {
+          name,
+          email,
+          password: hashPassword,
+        },
+      });
+
+      // クライアントへJWTを返す
+
+      const token = jwt.sign({ createUser }, "SECRET_KEY", {
+        expiresIn: "1h",
+      });
+
+      return res.json({ token, userId: createUser.userId });
+    } catch (err) {
+      return res.status(400).json(err);
+    }
+  } catch (e) {
+    return res.status(500).json(e);
   }
 });
 
-// 特定のユーザを取得
+// login
+router.post("/login", async (req: Request, res: Response) => {
+  const { email, password } = req.body;
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: { email },
+    });
+
+    // userが存在しなかった場合
+    if (!user) {
+      return res.status(400).json({ error: "ユーザーが存在しません" });
+    }
+
+    // パスワードの確認,複合
+
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    // パスワードが一致しなかった場合
+    if (!isMatch) {
+      return res.status(400).json({ error: "パスワードが一致しません" });
+    }
+
+    // クライアントへJWTを返す
+    const token = jwt.sign({ user }, "SECRET_KEY", {
+      expiresIn: "1h",
+    });
+
+    return res.json({ token, userId: user.userId });
+  } catch (err) {
+    return res.status(500).json(err);
+  }
+});
+
+// 特定のユーザのuserIdを取得
 router.get("/:userId", async (req: Request, res: Response) => {
   try {
     const user = await prisma.user.findUnique({

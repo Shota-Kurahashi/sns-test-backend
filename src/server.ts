@@ -16,8 +16,8 @@ app.use(cors(corsOptions));
 app.use("/api/users", userRouter);
 app.use("/api/post", postRouter);
 
-app.get("/", (req: Request, res: Response) => res.send("Hello World!"));
+app.get("/", (req: Request, res: Response) => res.send("Hello Heroku!"));
 
 app.listen(process.env.PORT || port, () =>
-  console.log(`Example app listening on port ${port}!`)
+  console.log(`Example app listening on port http://localhost:${port}/`)
 );
